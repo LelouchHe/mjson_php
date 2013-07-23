@@ -1,13 +1,5 @@
 <?php
 
-function m_json_print_n($s, $num) {
-    $str = '';
-    while ($num-- > 0) {
-        $str .= $s;
-    }
-    return $str;
-}
-
 function m_json_type($json) {
     $type = gettype($json);
     switch ($type) {
@@ -29,9 +21,8 @@ function m_json_type($json) {
     return $type;
 }
 
-function m_json_encode_help($json, $depth, $tab, $delim) {
+function m_json_encode_help($json, $tab, $delim) {
     $str = '';
-    $sep = m_json_print_n($tab, $depth);
 
     $type =  m_json_type($json);
     switch ($type) {
@@ -43,16 +34,16 @@ function m_json_encode_help($json, $depth, $tab, $delim) {
     case 'array':
         $num = count($json);
         foreach ($json as $k => $v) {
-            $str .= $sep;
+            $str .= $tab;
             if ($type == 'object') {
                 $str .= '"' . $k . '":';
             }
-            $v_str = m_json_encode_help($v, $depth + 1, $tab, $delim);
+            $v_str = m_json_encode_help($v, $tab . "\t", $delim);
 
             $subtype = m_json_type($v);
             $d = $delim[$subtype];
             if (isset($d)) {
-                $str .= $d[0] . "\n" . $v_str . $sep . $d[1];
+                $str .= $d[0] . "\n" . $v_str . $tab . $d[1];
             } else {
                 $str .= $v_str;
             }
@@ -89,12 +80,12 @@ function m_json_encode($json) {
     case 'object':
     case 'array':
         $str = $delim[$type][0] . "\n";
-        $str .= m_json_encode_help($json, 1, "\t", $delim);
+        $str .= m_json_encode_help($json, "\t", $delim);
         $str .= $delim[$type][1];
         break;
 
     default:
-        $str = m_json_encode_help($json, 1, "\t", $delim);
+        $str = m_json_encode_help($json, "\t", $delim);
         break;
     }
 
