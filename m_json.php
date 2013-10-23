@@ -41,8 +41,7 @@ function m_json_encode_help($json, $tab, $delim) {
             $v_str = m_json_encode_help($v, $tab . "\t", $delim);
 
             $subtype = m_json_type($v);
-            $d = $delim[$subtype];
-            if (isset($d)) {
+            if (isset($delim[$subtype]) && ($d = $delim[$subtype])) {
                 $str .= $d[0] . "\n" . $v_str . $tab . $d[1];
             } else {
                 $str .= $v_str;
