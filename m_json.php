@@ -21,7 +21,7 @@ function m_json_type($json) {
     return $type;
 }
 
-function m_json_encode_help($json, $tab, $delim) {
+function m_json_encode_help($json, $tab, $delim, $sep) {
     $str = '';
 
     $type =  m_json_type($json);
@@ -38,7 +38,7 @@ function m_json_encode_help($json, $tab, $delim) {
             if ($type == 'object') {
                 $str .= '"' . $k . '":';
             }
-            $v_str = m_json_encode_help($v, $tab . "\t", $delim);
+            $v_str = m_json_encode_help($v, $tab . $sep, $delim, $sep);
 
             $subtype = m_json_type($v);
             if (isset($delim[$subtype]) && ($d = $delim[$subtype])) {
@@ -68,7 +68,7 @@ function m_json_encode_help($json, $tab, $delim) {
 }
 
 // formated json encode
-function m_json_encode($json) {
+function m_json_encode($json, $sep = "\t") {
     $delim = array(
         'object' => array('{', '}'),
         'array'  => array('[', ']')
@@ -79,12 +79,12 @@ function m_json_encode($json) {
     case 'object':
     case 'array':
         $str = $delim[$type][0] . "\n";
-        $str .= m_json_encode_help($json, "\t", $delim);
+        $str .= m_json_encode_help($json, $sep, $delim, $sep);
         $str .= $delim[$type][1];
         break;
 
     default:
-        $str = m_json_encode_help($json, "\t", $delim);
+        $str = m_json_encode_help($json, $sep, $delim, $sep);
         break;
     }
 
